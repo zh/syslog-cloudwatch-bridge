@@ -46,7 +46,9 @@ This is a Syslog server that sends all logs received over to [AWS's CloudWatch L
   sudo apt-get install netcat
   ```
 
-## Download release
+## Install
+
+Grab a pre-built binary from the [GitHub Releases page](releases/).
 
 TODO: release URL here
 

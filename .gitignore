@@ -1,3 +1,4 @@
 .env
+release-*
 syslog-cloudwatch-*
 start_logs.sh

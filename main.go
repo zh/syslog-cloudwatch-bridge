@@ -125,7 +125,6 @@ func initCloudWatchStream() {
 
 	if err != nil {
 		log.Println("Created CloudWatch Logs stream (err):", err)
-		// 	 log.Fatal(err)
 	}
 
 	log.Println("Created CloudWatch Logs stream:", streamName)

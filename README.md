@@ -48,15 +48,16 @@ This is a Syslog server that sends all logs received over to [AWS's CloudWatch L
 
 ## Install
 
-Grab a pre-built binary from the [GitHub Releases page](https://github.com/zh/syslog-cloudwatch-bridge/releases).
-
-TODO: release URL here
-
-## Unzip and copy binary
+Grab a pre-built binary from the [GitHub Releases page](https://github.com/zh/syslog-cloudwatch-bridge/releases):
 
   ```bash
-  tar xvzf release----.tar.gz
-  cd release-x.y.z
+  wget https://github.com/zh/syslog-cloudwatch-bridge/releases/download/X.Y.Z/syslog-cloudwatch-bridge_vX.Y.Z_Linux_i386.tar.gz
+  ```
+
+## Untar and copy binary
+
+  ```bash
+  tar xvzf syslog-cloudwatch-bridge_vX.Y.Z_Linux_i386.tar.gz
   sudo cp syslog-cloudwatch-bridge /usr/local/bin
   sudo chmod +x /usr/local/bin/syslog-cloudwatch-bridge
 

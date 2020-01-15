@@ -1,0 +1,18 @@
+[Unit]
+Description=Syslog to AWS CloudWatch Logs Bridge
+After=ssh.service
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/cloudwatch
+ExecStartPre=/usr/sbin/ntpdate jp.pool.ntp.org
+ExecStart=/usr/local/bin/syslog-cloudwatch-bridge
+ExecStop=/bin/kill -TERM $MAINPID
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target
+Alias=cloudwatch.service

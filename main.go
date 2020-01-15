@@ -12,14 +12,18 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
+	"github.com/davecgh/go-spew/spew"
 	"gopkg.in/mcuadros/go-syslog.v2"
+	"gopkg.in/mcuadros/go-syslog.v2/format"
 )
 
-var port = os.Getenv("PORT")
+var port = os.Getenv("LOG_PORT")
 var logGroupName = os.Getenv("LOG_GROUP_NAME")
-var streamName = uuid.NewV4().String()
+var streamName = os.Getenv("LOG_STREAM_NAME")
+var obj, _err = uuid.NewV4()
+var streamNameSuffix = obj.String()
 var sequenceToken = ""
 
 var (
@@ -37,13 +41,19 @@ func main() {
 		log.Fatal("LOG_GROUP_NAME must be specified")
 	}
 
+	if streamName == "" {
+		log.Fatal("LOG_STREAM_NAME must be specified")
+	}
+	streamName = streamName + "-" + streamNameSuffix
+
 	if port == "" {
-		port = "514"
+		port = "5014"
 	}
 
-	address := fmt.Sprintf("0.0.0.0:%v", port)
+	address := fmt.Sprintf("127.0.0.1:%v", port)
 	log.Println("Starting syslog server on", address)
 	log.Println("Logging to group:", logGroupName)
+	log.Println("Logging to stream:", streamName)
 	initCloudWatchStream()
 
 	channel := make(syslog.LogPartsChannel)
@@ -66,7 +76,13 @@ func main() {
 	server.Wait()
 }
 
-func sendToCloudWatch(logPart syslog.LogParts) {
+func sendToCloudWatch(logPart format.LogParts) {
+	if logPart == nil || logPart["content"] == nil || logPart["content"] == "" {
+		log.Println("invalid log format")
+		spew.Dump(logPart)
+		return
+	}
+
 	// service is defined at run time to avoid session expiry in long running processes
 	var svc = cloudwatchlogs.New(session.New())
 	// set the AWS SDK to use our bundled certs for the minimal container (certs from CoreOS linux)
@@ -108,7 +124,8 @@ func initCloudWatchStream() {
 	})
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Created CloudWatch Logs stream (err):", err)
+		// 	 log.Fatal(err)
 	}
 
 	log.Println("Created CloudWatch Logs stream:", streamName)

@@ -1,16 +1,12 @@
-.PHONY: build linux clean
+.PHONY: build osx clean
 
 all: build
 
-build:
-	go build
+build: *.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o syslog-cloudwatch-bridge -a -tags netgo -ldflags '-w' .
 
-linux: *.go
-	CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w' .
+osx:
+	go build -o syslog-cloudwatch-osx
 
 clean:
-	rm -f syslog-cloudwatch-bridge
-
-release: linux
-	docker build -t rjocoleman/syslog-cloudwatch-bridge .
-	docker push rjocoleman/syslog-cloudwatch-bridge
+	rm -f syslog-cloudwatch-*

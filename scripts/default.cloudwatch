@@ -1,0 +1,7 @@
+# Default settings for /usr/local/bin/syslog-cloudwatch-bridge
+AWS_REGION=ap-northeast-1
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+LOG_PORT=5014
+LOG_GROUP_NAME=%LOG_GROUP_HERE%
+LOG_STREAM_NAME=%LOG_STREAM_HERE%
